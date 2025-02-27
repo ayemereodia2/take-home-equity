@@ -147,11 +147,18 @@ class CoinViewCell: UITableViewCell {
         ])
     }
     
-    func configureCell(model: String) {
-      cryptoName.text = "Tether"
-      cryptoShortName.text = "USDT"
-      currentPrice.text = "CA$ 3.28"
-      twentyFourHourPerformance.setTitle("0.10%", for: .normal)
-      twentyFourHourPerformance.setTitleColor(UIColor.green, for: .normal)
-    }
+  func configureCell(model: CryptoItem) {
+    cryptoName.text = model.name
+    cryptoShortName.text = model.symbol
+    currentPrice.text = "CA$\(model.price)"
+    
+  
+    let performance = Double.random(in: -5...5) // Mock value
+    let isPositive = performance >= 0
+    twentyFourHourPerformance.setTitle(String(format: "%.2f%%", performance), for: .normal)
+    twentyFourHourPerformance.setTitleColor(isPositive ? .green : .red, for: .normal)
+    twentyFourHourPerformance.backgroundColor = (isPositive ? UIColor.green : UIColor.red).withAlphaComponent(0.3)
+    
+    cryptoIcon.image = UIImage(systemName: "bitcoinsign.circle") 
+  }
 }

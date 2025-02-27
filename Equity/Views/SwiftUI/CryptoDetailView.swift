@@ -96,22 +96,6 @@ struct CryptoDetailView: View {
     }
 }
 
-// MARK: - Sample Model
-struct CryptoItem {
-    let name: String
-    let price: Double
-    let marketCap: Double
-    let volume24h: Double
-    let supply: Double
-    let performanceData: [CryptoPerformanceData]
-}
-
-// MARK: - Sample Data Model for Chart
-struct CryptoPerformanceData {
-    let date: Date
-    let price: Double
-}
-
 // MARK: - Preview
 struct CryptoDetailView_Previews: PreviewProvider {
     static var previews: some View {
@@ -127,6 +111,7 @@ struct CryptoDetailView_Previews: PreviewProvider {
             price: 53000,
             marketCap: 1_000_000_000,
             volume24h: 50_000_000,
+            symbol: "",
             supply: 21_000_000,
             performanceData: sampleData
         ))

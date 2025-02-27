@@ -7,15 +7,18 @@
 
 import UIKit
 import SwiftUI
+import Combine
 
 class CoinListViewController: UIViewController, UITableViewDelegate {
   // MARK: - Properties
   private var bottomSheetHeightConstraint: NSLayoutConstraint!
   private let filterViewModel = FilterViewModel()
   private var favoriteCryptoIds: Set<String> = []
+  private let viewModel: CoinListViewModel
   private var coins: [CryptoItem] = []
   private var popupHostingController: UIHostingController<PopupView>?
   private var popupIsVisible = false
+  private var cancellables = Set<AnyCancellable>()
 
   // MARK: - UI Components
   private lazy var tableView: UITableView = {
@@ -30,7 +33,16 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       view.translatesAutoresizingMaskIntoConstraints = false
       return view
   }()
-
+  
+  init(viewModel: CoinListViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - Lifecycle
   override func viewDidLoad() {
       super.viewDidLoad()
@@ -57,6 +69,20 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       headerView.filterAction = { [weak self] in
           self?.presentFilterSheet()
       }
+  }
+  
+  private func bindViewModel() {
+    viewModel.$coins
+      .sink { [weak self] _ in
+        self?.tableView.reloadData()
+      }
+      .store(in: &cancellables)
+    
+    viewModel.$isLoading
+      .sink { [weak self] isLoading in
+        if !isLoading { self?.tableView.reloadData() }
+      }
+      .store(in: &cancellables)
   }
 
   private func setupConstraints() {
@@ -86,14 +112,15 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
 extension CoinListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     if let cell = tableView.dequeueReusableCell(withIdentifier: CoinViewCell.identifier) as? CoinViewCell {
-        cell.configureCell(model: "")
-        return cell
+      let coin = viewModel.coins[indexPath.row]
+      cell.configureCell(model: coin)
+      return cell
     }
     return UITableViewCell()
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    20
+    viewModel.coins.count
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -133,6 +160,13 @@ extension CoinListViewController: UITableViewDataSource {
     configuration.performsFirstActionWithFullSwipe = true
     return configuration
   }
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    let threshold = 5 // Fetch 5 rows before the end
+    if indexPath.row == viewModel.coins.count - threshold {
+      viewModel.fetchNextPage()
+    }
+  }
 }
 
 extension CoinListViewController {
@@ -142,7 +176,6 @@ extension CoinListViewController {
               sheet.detents = [
                 .medium()
               ]
-              
               sheet.prefersGrabberVisible = true
               sheet.preferredCornerRadius = 20
           }
@@ -156,13 +189,8 @@ extension CoinListViewController {
   private func navigateToCryptoDetail(with crypto: CryptoItem?) {
     let detailView = CryptoDetailView(crypto: nil)
     let hostingController = UIHostingController(rootView: detailView)
-    
-    let customBackImage = UIImage(systemName: "arrow.left")
-    let customBackButton = UIBarButtonItem(image: customBackImage, style: .plain, target: nil, action: nil)
-    customBackButton.tintColor = UIColor.dynamicColor(for: .text)
-    customBackButton.accessibilityLabel = "Back"
-    navigationItem.backBarButtonItem = customBackButton
-    
+    hostingController.navigationItem.hidesBackButton = true
+
     navigationController?.pushViewController(hostingController, animated: true)
   }
   

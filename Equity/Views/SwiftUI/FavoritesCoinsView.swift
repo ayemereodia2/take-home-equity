@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Coin: Identifiable {
+struct Coin1: Identifiable {
     let id = UUID()
     let name: String
     let shortName: String
@@ -18,7 +18,7 @@ struct Coin: Identifiable {
 }
 
 struct CoinViewSUCell: View {
-    let coin: Coin
+    let coin: Coin1
     
     var body: some View {
         HStack(spacing: 15) {
@@ -59,16 +59,18 @@ struct CoinViewSUCell: View {
 }
 
 struct FavoritesCoinsView: View {
-    let favoriteCoins: [Coin] = [
-        Coin(name: "Tether", shortName: "USDT", price: "CA$ 3.28", performance: "0.10%", performanceColor: .green, iconName: "brain.head.profile"),
-        Coin(name: "Bitcoin", shortName: "BTC", price: "CA$ 55,000", performance: "-0.45%", performanceColor: .red, iconName: "bitcoinsign.circle"),
-        Coin(name: "Ethereum", shortName: "ETH", price: "CA$ 3,200", performance: "+1.2%", performanceColor: .green, iconName: "e.circle")
+    let favoriteCoins: [Coin1] = [
+      Coin1(name: "Tether", shortName: "USDT", price: "CA$ 3.28", performance: "0.10%", performanceColor: .green, iconName: "brain.head.profile"),
+      Coin1(name: "Bitcoin", shortName: "BTC", price: "CA$ 55,000", performance: "-0.45%", performanceColor: .red, iconName: "bitcoinsign.circle"),
+      Coin1(name: "Ethereum", shortName: "ETH", price: "CA$ 3,200", performance: "+1.2%", performanceColor: .green, iconName: "e.circle")
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(favoriteCoins) { coin in
-              CoinViewSUCell(coin: coin)
+              NavigationLink(destination: CryptoDetailView(crypto: nil)) {
+                CoinViewSUCell(coin: coin)
+              }
             }
             .navigationTitle("Favorite Coins")
             .listStyle(.plain)
