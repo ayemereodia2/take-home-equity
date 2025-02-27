@@ -15,6 +15,7 @@ struct CryptoItem {
     let volume24h: Double
     let symbol: String
     let supply: Double
+    let iconUrl: String
     let performanceData: [CryptoPerformanceData]
 }
 

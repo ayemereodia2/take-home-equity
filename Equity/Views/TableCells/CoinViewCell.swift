@@ -9,7 +9,8 @@ import UIKit
 
 class CoinViewCell: UITableViewCell {
     static let identifier = "CoinViewCell"
-    
+    private var imageLoadTask: URLSessionDataTask?
+
     let circleView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         view.layer.cornerRadius = view.bounds.height / 2
@@ -159,6 +160,20 @@ class CoinViewCell: UITableViewCell {
     twentyFourHourPerformance.setTitleColor(isPositive ? .green : .red, for: .normal)
     twentyFourHourPerformance.backgroundColor = (isPositive ? UIColor.green : UIColor.red).withAlphaComponent(0.3)
     
-    cryptoIcon.image = UIImage(systemName: "bitcoinsign.circle") 
+    // Load icon image if URL is provided
+    if let url = URL(string: "https://cdn.coinranking.com/iImvX5-OG/5426.png") {
+      imageLoadTask = ImageLoader.shared.loadImage(from: url) { [weak self] image in
+        guard let self = self else { return }
+        self.cryptoIcon.image = image ?? UIImage(systemName: "exclamationmark.triangle")
+      }
+    }
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    // Cancel any ongoing image load task to prevent wrong image assignment
+    ImageLoader.shared.cancel(task: imageLoadTask)
+    imageLoadTask = nil
+    cryptoIcon.image = UIImage(systemName: "bitcoinsign.circle") // Reset to placeholder
   }
 }
