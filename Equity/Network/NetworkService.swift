@@ -21,7 +21,7 @@ enum NetworkError: Error {
 
 // MARK: - Network Service Protocol
 protocol NetworkService {
-    func fetchCoins(offset: Int, limit: Int) -> AnyPublisher<CoinResponse, Error>
+    func fetchCoins(offset: Int, limit: Int) -> AnyPublisher<CoinResponse, NetworkError>
 }
 
 // MARK: - API Endpoint Helper
@@ -57,7 +57,7 @@ class APIService: NetworkService {
         self.apiKey = apiKey
     }
     
-    func fetchCoins(offset: Int, limit: Int) -> AnyPublisher<CoinResponse, Error> {
+    func fetchCoins(offset: Int, limit: Int) -> AnyPublisher<CoinResponse, NetworkError> {
         guard let url = APIEndpoint.coins(offset: offset, limit: limit).url(baseURL: baseURL) else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
@@ -74,7 +74,14 @@ class APIService: NetworkService {
             }
             .decode(type: CoinResponse.self, decoder: JSONDecoder())
             .mapError { error in
-                return (error as? DecodingError) != nil ? NetworkError.decodingError : NetworkError.requestFailed(error)
+              if let decodingError = error as? DecodingError {
+                print("❌ Decoding Error: \(decodingError.localizedDescription)")
+                print("🔍 Detailed Decoding Error: \(decodingError)")
+                return NetworkError.decodingError
+              } else {
+                return NetworkError.requestFailed(error)
+              }
+//                return (error as? DecodingError) != nil ? NetworkError.decodingError : NetworkError.requestFailed(error)
             }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()

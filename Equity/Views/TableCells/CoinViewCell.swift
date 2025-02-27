@@ -144,6 +144,8 @@ class CoinViewCell: UITableViewCell {
             circleView.widthAnchor.constraint(equalToConstant: 40),
             cryptoIcon.centerXAnchor.constraint(equalTo: circleView.centerXAnchor),
             cryptoIcon.centerYAnchor.constraint(equalTo: circleView.centerYAnchor),
+          cryptoIcon.widthAnchor.constraint(equalToConstant: 30),
+          cryptoIcon.heightAnchor.constraint(equalToConstant: 30),
           twentyFourHourPerformance.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
@@ -151,7 +153,7 @@ class CoinViewCell: UITableViewCell {
   func configureCell(model: CryptoItem) {
     cryptoName.text = model.name
     cryptoShortName.text = model.symbol
-    currentPrice.text = "CA$\(model.price)"
+    currentPrice.text = "CA$" + String(format: "%.2f%%",model.price)
     
   
     let performance = Double.random(in: -5...5) // Mock value
@@ -161,7 +163,8 @@ class CoinViewCell: UITableViewCell {
     twentyFourHourPerformance.backgroundColor = (isPositive ? UIColor.green : UIColor.red).withAlphaComponent(0.3)
     
     // Load icon image if URL is provided
-    if let url = URL(string: "https://cdn.coinranking.com/iImvX5-OG/5426.png") {
+    if let strUrl = model.iconUrl,
+       let url = URL(string: strUrl) {
       imageLoadTask = ImageLoader.shared.loadImage(from: url) { [weak self] image in
         guard let self = self else { return }
         self.cryptoIcon.image = image ?? UIImage(systemName: "exclamationmark.triangle")

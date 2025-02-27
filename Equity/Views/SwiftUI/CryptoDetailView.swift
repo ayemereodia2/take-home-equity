@@ -97,24 +97,25 @@ struct CryptoDetailView: View {
 }
 
 // MARK: - Preview
-struct CryptoDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleData = [
-            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 3), price: 50000),
-            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 2), price: 51000),
-            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 1), price: 52000),
-            CryptoPerformanceData(date: Date(), price: 53000)
-        ]
-
-        CryptoDetailView(crypto: CryptoItem(
-            name: "Bitcoin",
-            price: 53000,
-            marketCap: 1_000_000_000,
-            volume24h: 50_000_000,
-            symbol: "",
-            supply: 21_000_000,
-            performanceData: sampleData
-        ))
-    }
-}
-
+//struct CryptoDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let sampleData = [
+//            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 3), price: 50000),
+//            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 2), price: 51000),
+//            CryptoPerformanceData(date: Date().addingTimeInterval(-86400 * 1), price: 52000),
+//            CryptoPerformanceData(date: Date(), price: 53000)
+//        ]
+//
+//        CryptoDetailView(crypto: CryptoItem(
+//          from: <#Coin#>, name: "Bitcoin",
+//            price: 53000,
+//            marketCap: 1_000_000_000,
+//            volume24h: 50_000_000,
+//            symbol: "",
+//            supply: 21_000_000,
+//            iconUrl: "https://cdn.coinranking.com/iImvX5-OG/5426.png",
+//            performanceData: sampleData
+//        ))
+//    }
+//}
+//

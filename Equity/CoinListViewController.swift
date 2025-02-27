@@ -15,7 +15,6 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
   private let filterViewModel = FilterViewModel()
   private var favoriteCryptoIds: Set<String> = []
   private let viewModel: CoinListViewModel
-  private var coins: [CryptoItem] = []
   private var popupHostingController: UIHostingController<PopupView>?
   private var popupIsVisible = false
   private var cancellables = Set<AnyCancellable>()
@@ -49,6 +48,7 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       setupUI()
       configureTableView()
       setupHeaderView()
+      bindViewModel()
   }
 
   // MARK: - Setup Methods
@@ -103,8 +103,8 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
   }
   // MARK: - UITableView Delegate (Navigation)
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //let selectedCrypto = coins[indexPath.row]
-    navigateToCryptoDetail(with: nil)
+    let selectedCrypto = viewModel.coins[indexPath.row]
+    navigateToCryptoDetail(with: selectedCrypto)
   }
 }
 
@@ -186,8 +186,8 @@ extension CoinListViewController {
 
 extension CoinListViewController {
   // MARK: - Navigation using UIHostingController
-  private func navigateToCryptoDetail(with crypto: CryptoItem?) {
-    let detailView = CryptoDetailView(crypto: nil)
+  private func navigateToCryptoDetail(with crypto: CryptoItem) {
+    let detailView = CryptoDetailView(crypto: crypto)
     let hostingController = UIHostingController(rootView: detailView)
     hostingController.navigationItem.hidesBackButton = true
 

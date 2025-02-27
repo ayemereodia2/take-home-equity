@@ -35,9 +35,7 @@ class CoinListViewModel: ObservableObject {
                 }
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                let newCoins = response.data.coins.map { coin in
-                  CryptoItem(name: "", price: 22, marketCap: 22, volume24h: 33, symbol: "", supply: 90, performanceData: [])
-                }
+                let newCoins = response.data.coins.map { CryptoItem(from: $0) }
                 self.coins.append(contentsOf: newCoins)
                 self.currentOffset += self.itemsPerPage // Move offset forward
                 self.hasMorePages = self.currentOffset < 100 // Stop at 100 coins
