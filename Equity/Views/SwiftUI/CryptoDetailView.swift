@@ -84,12 +84,12 @@ struct CryptoDetailView: View {
         .toolbar {
           ToolbarItem(placement: .navigationBarLeading) {
             Button(action: {
-              presentationMode.wrappedValue.dismiss() // Pop view
+              presentationMode.wrappedValue.dismiss()
             }) {
               HStack {
-                Image(systemName: "arrow.left") // Custom icon
+                Image(systemName: "arrow.left")
               }
-              .foregroundColor(.red) // Customize color
+              .foregroundColor(UIColor.toSwiftUIColor(for: .text))
             }
           }
         }
