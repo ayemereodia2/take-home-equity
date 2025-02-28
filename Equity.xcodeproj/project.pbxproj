@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E797BD502D714D2E00406586 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = E797BD4F2D714D2E00406586 /* SVGKit */; };
+		E797BD522D714D2E00406586 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E797BD512D714D2E00406586 /* SVGKitSwift */; };
 		E7AC325C2D7006F7001E6707 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E7AC325B2D7006F7001E6707 /* README.md */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E797BD522D714D2E00406586 /* SVGKitSwift in Frameworks */,
+				E797BD502D714D2E00406586 /* SVGKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +135,8 @@
 			);
 			name = Equity;
 			packageProductDependencies = (
+				E797BD4F2D714D2E00406586 /* SVGKit */,
+				E797BD512D714D2E00406586 /* SVGKitSwift */,
 			);
 			productName = Equity;
 			productReference = E7E34AEA2D6E963B009A894E /* Equity.app */;
@@ -214,6 +220,9 @@
 			);
 			mainGroup = E7E34AE12D6E963B009A894E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E7E34AEB2D6E963B009A894E /* Products */;
 			projectDirPath = "";
@@ -574,6 +583,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVGKit/SVGKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E797BD4F2D714D2E00406586 /* SVGKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKit;
+		};
+		E797BD512D714D2E00406586 /* SVGKitSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKitSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E7E34AE22D6E963B009A894E /* Project object */;
 }

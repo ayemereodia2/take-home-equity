@@ -89,8 +89,7 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       NSLayoutConstraint.activate([
           headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
           headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-          headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-          headerView.heightAnchor.constraint(equalToConstant: 120),
+          headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),          
           tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
           tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
           tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
