@@ -33,6 +33,16 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       return view
   }()
   
+  private lazy var noResultsLabel: UILabel = {
+      let label = UILabel()
+      label.text = "No results found"
+      label.textAlignment = .center
+      label.textColor = .gray
+      label.isHidden = true
+      label.translatesAutoresizingMaskIntoConstraints = false
+      return label
+  }()
+  
   init(viewModel: CoinListViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
@@ -55,6 +65,7 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
   private func setupUI() {
       view.addSubview(headerView)
       view.addSubview(tableView)
+      view.addSubview(noResultsLabel)
       setupConstraints()
   }
 
@@ -66,13 +77,21 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
   }
 
   private func setupHeaderView() {
-      headerView.filterAction = { [weak self] in
-          self?.presentFilterSheet()
-      }
+    headerView.filterAction = { [weak self] in
+      self?.presentFilterSheet()
+    }
+    
+    headerView.searchAction = { [weak self] queryString in
+      self?.viewModel.searchText = queryString
+    }
+    
+    headerView.cancelAction = { [weak self] in
+      self?.viewModel.resetSearch()
+    }
   }
   
   private func bindViewModel() {
-    viewModel.$coins
+    viewModel.$filteredCoins
       .sink { [weak self] _ in
         self?.tableView.reloadData()
       }
@@ -83,7 +102,14 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
         if !isLoading { self?.tableView.reloadData() }
       }
       .store(in: &cancellables)
+    
+    viewModel.$showNoResults
+      .sink { [weak self] showNoResults in
+        self?.noResultsLabel.isHidden = !showNoResults
+      }
+      .store(in: &cancellables)
   }
+  
 
   private func setupConstraints() {
       NSLayoutConstraint.activate([
@@ -93,7 +119,12 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
           tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
           tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
           tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-          tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+          tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+          
+          noResultsLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+          noResultsLabel.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
+          noResultsLabel.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 16),
+          noResultsLabel.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -16)
       ])
   }
 
@@ -110,8 +141,14 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
 
 extension CoinListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard indexPath.row < viewModel.filteredCoins.count else {
+      tableView.separatorStyle = .none
+      return UITableViewCell()
+    }
+    
     if let cell = tableView.dequeueReusableCell(withIdentifier: CoinViewCell.identifier) as? CoinViewCell {
-      let coin = viewModel.coins[indexPath.row]
+      let coin = viewModel.filteredCoins[indexPath.row]
+      tableView.separatorStyle = .singleLine
       cell.configureCell(model: coin)
       return cell
     }
@@ -119,7 +156,7 @@ extension CoinListViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    viewModel.coins.count
+    viewModel.filteredCoins.count
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -162,7 +199,7 @@ extension CoinListViewController: UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     let threshold = 5 // Fetch 5 rows before the end
-    if indexPath.row == viewModel.coins.count - threshold {
+    if indexPath.row == viewModel.filteredCoins.count - threshold {
       viewModel.fetchNextPage()
     }
   }

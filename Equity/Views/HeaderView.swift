@@ -13,7 +13,9 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
   private var collectionViewHeightConstraint: NSLayoutConstraint!
   private var headerViewHeightConstraint: NSLayoutConstraint!
   var filterAction: (() -> Void)?
-  
+  var searchAction: ((String) -> Void)?
+  var cancelAction: (() -> Void)?
+
   private let topSearchView:TopSearchView = {
     let topSearchView = TopSearchView()
     topSearchView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +75,12 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
     
     searchInputView.cancelAction = { [weak self] in
       self?.toggleSearchInputView()
+      self?.cancelAction?()
+    }
+    
+    // search action
+    searchInputView.searchAction = { [weak self] text in
+      self?.searchAction?(text)
     }
   }
   

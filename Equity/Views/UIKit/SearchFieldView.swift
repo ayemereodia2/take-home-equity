@@ -9,12 +9,13 @@ import UIKit
 
 class SearchFieldView: UIView {
   var cancelAction: (() -> Void)?
+  var searchAction: ((String) -> Void)?
+  
   let searchTextField:UITextField = {
     let searchTextField = UITextField()
     searchTextField.translatesAutoresizingMaskIntoConstraints = false
     searchTextField.placeholder = "Search"
     searchTextField.borderStyle = .none
-    searchTextField.backgroundColor = .blue
     return searchTextField
   }()
   
@@ -23,7 +24,6 @@ class SearchFieldView: UIView {
     cancelButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
     cancelButton.translatesAutoresizingMaskIntoConstraints = false
     cancelButton.tintColor = UIColor.dynamicColor(for: .text)
-    cancelButton.backgroundColor = .red
     return cancelButton
   }()
   
@@ -42,7 +42,8 @@ class SearchFieldView: UIView {
     addSubview(stackView)
     stackView.addArrangedSubview(cancelButton)
     stackView.addArrangedSubview(searchTextField)
-    
+    searchTextField.delegate = self
+
     // Set constraints for the text field
     NSLayoutConstraint.activate([
       stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -59,13 +60,30 @@ class SearchFieldView: UIView {
   
   private func setupActions() {
     cancelButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
+    searchTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
   }
   
   @objc private func searchButtonTapped() {
     cancelAction?()
   }
   
+  @objc private func textFieldDidChange() {
+    if let text = searchTextField.text {
+      searchAction?(text)
+    }
+  }
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+extension SearchFieldView: UITextFieldDelegate {
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    if let text = textField.text {
+      searchAction?(text)
+    }
+    textField.resignFirstResponder() // Dismiss the keyboard
+    return true
   }
 }

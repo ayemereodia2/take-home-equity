@@ -19,6 +19,7 @@ struct CryptoItem: Identifiable {
     let symbol: String
     let supply: Double
     let iconUrl: String?
+    let change:String
     
     init(from coin: Coin) {
         self.id = coin.id
@@ -29,6 +30,7 @@ struct CryptoItem: Identifiable {
         self.symbol = coin.symbol
         self.supply = 0.0
         self.iconUrl = coin.iconUrl
+        self.change = coin.change
     }
 }
 

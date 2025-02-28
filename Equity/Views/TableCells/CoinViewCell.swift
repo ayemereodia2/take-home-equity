@@ -155,10 +155,8 @@ class CoinViewCell: UITableViewCell {
     cryptoShortName.text = model.symbol
     currentPrice.text = "CA$" + String(format: "%.2f%%",model.price)
     
-  
-    let performance = Double.random(in: -5...5) // Mock value
-    let isPositive = performance >= 0
-    twentyFourHourPerformance.setTitle(String(format: "%.2f%%", performance), for: .normal)
+    let isPositive = Double(model.change) ?? 0 >= 0
+    twentyFourHourPerformance.setTitle(String(format: "%.2f%%", Double(model.change) ?? 0), for: .normal)
     twentyFourHourPerformance.setTitleColor(isPositive ? .green : .red, for: .normal)
     twentyFourHourPerformance.backgroundColor = (isPositive ? UIColor.green : UIColor.red).withAlphaComponent(0.3)
     
