@@ -1,0 +1,34 @@
+# Xcode
+DerivedData/
+.idea/
+.xcuserstate
+xcuserdata/
+*.xccheckout
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+# Xcode Build
+build/
+Build/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/
+
+# Swift Package Manager
+.build/
+Packages/
+
+# User-specific files
+*.swp
+*.swo
+*.ds_store
+
+# macOS Finder files
+.DS_Store
+
+# Static analysis tools
+*.clang*
