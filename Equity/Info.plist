@@ -20,7 +20,6 @@
     </dict>
   </dict>
 
-  <!-- Added API Configuration -->
   <key>API_BASE_URL</key>
   <string>https://api.coinranking.com/v2</string>
 

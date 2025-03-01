@@ -83,6 +83,10 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       self?.presentFilterSheet()
     }
     
+    headerView.allAssetsAction = { [weak self] in
+      self?.reloadCoins()
+    }
+    
     headerView.searchAction = { [weak self] queryString in
       self?.viewModel.searchText = queryString
     }
@@ -228,7 +232,7 @@ extension CoinListViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    let threshold = 5 // Fetch 5 rows before the end
+    let threshold = 5
     if indexPath.row == viewModel.filteredCoins.count - threshold {
       viewModel.fetchNextPage()
     }
@@ -242,17 +246,26 @@ extension CoinListViewController {
       sheet.detents = [.medium()]
       sheet.prefersGrabberVisible = true
       sheet.preferredCornerRadius = 20
+      sheet.selectedDetentIdentifier = .large
     }
     
     filterVC.highestPriceAction = { [weak self] in
-      // filter and reload table
+      self?.viewModel.filterByHighestPrice()
+      self?.tableView.reloadData()
+      filterVC.dismiss(animated: true)
     }
     
     filterVC.best24HourAction = { [weak self] in
-      // filter and reload table
+      self?.viewModel.filterByBest24HourPerformance()
+      self?.tableView.reloadData()
+      filterVC.dismiss(animated: true)
     }
     
     present(filterVC, animated: true, completion: nil)
+  }
+  
+  private func reloadCoins() {
+    viewModel.fetchNextPage()
   }
 }
 

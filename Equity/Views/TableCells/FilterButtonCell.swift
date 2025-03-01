@@ -36,7 +36,6 @@ class FilterButtonCell: UICollectionViewCell {
     button.setTitle(option.title, for: .normal)
     button.setImage(UIImage(systemName: option.imageTitle ?? ""), for: .normal)
     button.tintColor = UIColor.dynamicColor(for: .text)
-    
   }
   
   private func setupActions() {

@@ -55,7 +55,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.dynamicColor(for: .background)
         // Set up table view
         view.addSubview(tableView)
         tableView.delegate = self

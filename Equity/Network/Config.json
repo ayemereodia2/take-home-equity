@@ -1,0 +1,14 @@
+{
+  "development": {
+    "baseURL": "https://api.coinranking.com/v2",
+    "apiKey": "coinrankinga194c6933c875dc2a9a6d24b09b76206fb91e9c2e362c632"
+  },
+  "staging": {
+    "baseURL": "https://api.staging.coinranking.com/v2",
+    "apiKey": "coinrankinga194c6933c875dc2a9a6d24b09b76206fb91e9c2e362c632"
+  },
+  "production": {
+    "baseURL": "https://api.prod.coinranking.com/v2",
+    "apiKey": "coinrankinga194c6933c875dc2a9a6d24b09b76206fb91e9c2e362c632"
+  }
+}

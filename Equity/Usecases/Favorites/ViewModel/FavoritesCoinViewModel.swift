@@ -57,4 +57,14 @@ extension FavoritesCoinViewModel {
             }
         }
     }
+  func removeFavorite(cryptoId: String) async {
+    do {
+      try favoritesRepository.removeFavorite(cryptoId: cryptoId)
+      await reloadFavorites()
+    } catch {
+      await MainActor.run {
+        self.errorMessage = "Failed to update favorite: \(error.localizedDescription)"
+      }
+    }
+  }
 }

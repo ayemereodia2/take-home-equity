@@ -30,8 +30,8 @@ class UserDefaultsFavoritesRepository: FavoritesRepository {
         queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             do {
-                let data = try JSONEncoder().encode(crypto) // Serialize CryptoItem
-                self.userDefaults.set(data, forKey: crypto.id) // Store in UserDefaults
+                let data = try JSONEncoder().encode(crypto)
+                self.userDefaults.set(data, forKey: crypto.id)
             } catch {
                 print("Error encoding CryptoItem: \(error)")
             }

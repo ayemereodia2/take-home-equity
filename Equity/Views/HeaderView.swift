@@ -13,6 +13,7 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
   private var collectionViewHeightConstraint: NSLayoutConstraint!
   private var headerViewHeightConstraint: NSLayoutConstraint!
   var filterAction: (() -> Void)?
+  var allAssetsAction: (() -> Void)?
   var searchAction: ((String) -> Void)?
   var cancelAction: (() -> Void)?
 
@@ -142,6 +143,10 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
     case 0:
       cell.onFilterTapped = { [weak self] in
         self?.filterAction?()
+      }
+    case 1:
+      cell.onFilterTapped = { [weak self] in
+        self?.allAssetsAction?()
       }
     default:
       debugPrint("Pass")

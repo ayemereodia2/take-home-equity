@@ -63,5 +63,5 @@ struct CoinViewSUCell: View {
 
 
 #Preview {
-  //CoinViewSUCell(coin: <#CryptoItem#>)
+  //CoinViewSUCell(coin: CryptoItem)
 }
