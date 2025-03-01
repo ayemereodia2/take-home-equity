@@ -1,6 +1,15 @@
 {
-  "originHash" : "3f2d07eb5b13e3876982008c3fc6c6d723b6df8c2fdfec20382bee7d28626957",
+  "originHash" : "70e63769179f494704ec69620dda1770b418f45ac3f723d0cfef896ecb300ed3",
   "pins" : [
+    {
+      "identity" : "charts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChartsOrg/Charts",
+      "state" : {
+        "revision" : "dd9c72e3d7e751e769971092a6bd72d39198ae63",
+        "version" : "5.1.0"
+      }
+    },
     {
       "identity" : "cocoalumberjack",
       "kind" : "remoteSourceControl",

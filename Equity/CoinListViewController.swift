@@ -15,6 +15,7 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
   private let filterViewModel = FilterViewModel()
   private var favoriteCryptoIds: Set<String> = []
   private let viewModel: CoinListViewModel
+  private let favoriteCointViewModel: FavoritesCoinViewModel
   private var popupHostingController: UIHostingController<PopupView>?
   private var popupIsVisible = false
   private var cancellables = Set<AnyCancellable>()
@@ -43,8 +44,9 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
       return label
   }()
   
-  init(viewModel: CoinListViewModel) {
+  init(viewModel: CoinListViewModel, favoriteCointViewModel: FavoritesCoinViewModel) {
     self.viewModel = viewModel
+    self.favoriteCointViewModel = favoriteCointViewModel
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -108,6 +110,18 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
         self?.noResultsLabel.isHidden = !showNoResults
       }
       .store(in: &cancellables)
+    
+    viewModel.$errorMessage
+      .sink { [weak self] errorMessage in
+        guard let self = self else { return }
+        if let message = errorMessage {
+          showPopup(message: message, messageType: .error)
+          self.tableView.isHidden = true
+        } else {
+          self.tableView.isHidden = false
+        }
+      }
+      .store(in: &cancellables)
   }
   
 
@@ -142,13 +156,13 @@ class CoinListViewController: UIViewController, UITableViewDelegate {
 extension CoinListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard indexPath.row < viewModel.filteredCoins.count else {
-      tableView.separatorStyle = .none
+      disableTableView()
       return UITableViewCell()
     }
     
     if let cell = tableView.dequeueReusableCell(withIdentifier: CoinViewCell.identifier) as? CoinViewCell {
       let coin = viewModel.filteredCoins[indexPath.row]
-      tableView.separatorStyle = .singleLine
+      enableTableView()
       cell.configureCell(model: coin)
       return cell
     }
@@ -162,39 +176,55 @@ extension CoinListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     UITableView.automaticDimension
   }
+  
   // Add swipe action for favoring
   func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    let cryptoId = "Qwsogvtv82FCd_\(indexPath.row)" // Example ID
+    let coinItem = viewModel.filteredCoins[indexPath.row]
+    let cryptoId = coinItem.id
+    let coinName = coinItem.symbol
+    let isFavorite = viewModel.isFavorite(cryptoId: cryptoId)
     
-    let favoriteAction = UIContextualAction(style: .normal, title: favoriteCryptoIds.contains(cryptoId) ? "Unfavorite" : "Favorite") { [weak self] (action, view, completion) in
-      guard let self = self else { return }
-      if self.favoriteCryptoIds.contains(cryptoId) {
-        self.favoriteCryptoIds.remove(cryptoId)
-      } else {
-        self.favoriteCryptoIds.insert(cryptoId)
+    let favoriteAction = UIContextualAction(style: .normal, title: isFavorite ? "Unfavorite" : "Favorite") { [weak self] (_, _, completion) in
+      guard let self = self else {
+        completion(false)
+        return
       }
       
-      // Show pop-up message
-      let message = !favoriteCryptoIds.contains(cryptoId) ? NSLocalizedString("removed_from_favorites", comment: "") : NSLocalizedString("added_to_favorites", comment: "")
-
-      self.showPopup(message: message)
-      
-      // Update the cell's favorite icon
-      if let cell = tableView.cellForRow(at: indexPath) as? CoinViewCell {
-        //cell.updateFavoriteIcon(isFavorite:
-        //self.favoriteCryptoIds.contains(cryptoId))
+      Task {
+        await self.viewModel.toggleFavorite(cryptoId: cryptoId, coin: coinItem)
+        
+        // Ensure UI updates correctly by reloading the row
+        DispatchQueue.main.async {
+          tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        
+        // Show a popup message
+        let message = self.viewModel.isFavorite(cryptoId: cryptoId) ?
+        NSLocalizedString("added_to_favorites", comment: "") :
+        NSLocalizedString("removed_from_favorites", comment: "")
+        self.showPopup(message: "\(coinName) \(message)", messageType: .info)
+        
+        completion(true)
       }
-      completion(true)
     }
     
-    // Set favorite icon (using SF Symbols)
-    favoriteAction.image = UIImage(systemName: favoriteCryptoIds.contains(cryptoId) ? "star.fill" : "star")
-    favoriteAction.backgroundColor = favoriteCryptoIds.contains(cryptoId) ? .systemYellow : .systemGray
-    
+    favoriteAction.image = UIImage(systemName: isFavorite ? "star.fill" : "star")
+    favoriteAction.backgroundColor = isFavorite ? .systemYellow : .systemGray
     
     let configuration = UISwipeActionsConfiguration(actions: [favoriteAction])
     configuration.performsFirstActionWithFullSwipe = true
     return configuration
+  }
+
+  
+  private func disableTableView() {
+    tableView.separatorStyle = .none
+    tableView.allowsSelection = false
+  }
+  
+  private func enableTableView() {
+    tableView.separatorStyle = .singleLine
+    tableView.allowsSelection = true
   }
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -206,34 +236,51 @@ extension CoinListViewController: UITableViewDataSource {
 }
 
 extension CoinListViewController {
-    private func presentFilterSheet() {
-          let filterVC = FilterViewController()
-          if let sheet = filterVC.sheetPresentationController {
-              sheet.detents = [
-                .medium()
-              ]
-              sheet.prefersGrabberVisible = true
-              sheet.preferredCornerRadius = 20
-          }
-          
-          present(filterVC, animated: true, completion: nil)
-      }
+  private func presentFilterSheet() {
+    let filterVC = FilterViewController()
+    if let sheet = filterVC.sheetPresentationController {
+      sheet.detents = [.medium()]
+      sheet.prefersGrabberVisible = true
+      sheet.preferredCornerRadius = 20
+    }
+    
+    filterVC.highestPriceAction = { [weak self] in
+      // filter and reload table
+    }
+    
+    filterVC.best24HourAction = { [weak self] in
+      // filter and reload table
+    }
+    
+    present(filterVC, animated: true, completion: nil)
+  }
 }
 
 extension CoinListViewController {
   // MARK: - Navigation using UIHostingController
   private func navigateToCryptoDetail(with crypto: CryptoItem) {
-    let detailView = CryptoDetailView(crypto: crypto)
+    
+    let detailView = CryptoDetailView(
+      crypto: crypto,
+      viewModel: favoriteCointViewModel
+    )
+    
     let hostingController = UIHostingController(rootView: detailView)
     hostingController.navigationItem.hidesBackButton = true
 
     navigationController?.pushViewController(hostingController, animated: true)
   }
   
-  private func showPopup(message: String) {
+  private func showPopup(message: String, messageType: MessageType) {
     if popupIsVisible { return }
     popupIsVisible = true
-    let popupView = PopupView(message: message, isVisible: .constant(true))
+    
+    let popupView = PopupView(
+      message: message,
+      isVisible: .constant(true),
+      messageType: messageType
+    )
+    
     let hostingController = UIHostingController(rootView: popupView)
     hostingController.view.backgroundColor = .clear
     hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -258,3 +305,8 @@ extension CoinListViewController {
   }
 }
 
+enum MessageType {
+  case error
+  case warning
+  case info
+}

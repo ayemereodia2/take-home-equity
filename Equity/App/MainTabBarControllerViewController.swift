@@ -12,7 +12,12 @@ class MainTabBarController: UITabBarController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let coinListVC = UINavigationController(rootViewController: CoinListViewController(viewModel: CoinListViewModel(networkService: APIService())))
+    let coinListVC = UINavigationController(rootViewController: CoinListViewController(
+      viewModel: CoinListViewModel(
+        networkService: APIService()
+      ),
+      favoriteCointViewModel: FavoritesCoinViewModel()
+    ))
     
     coinListVC.tabBarItem = UITabBarItem(title: "", image: UIImage(systemName: "house"), tag: 0)
     

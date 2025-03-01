@@ -15,28 +15,41 @@ class CoinListViewModel: ObservableObject {
     @Published var hasMorePages = true
     @Published var searchText: String = ""
     @Published var showNoResults = false
+    @Published var errorMessage: String? = nil
+    @Published var favoriteIds: [CryptoItem] = []
   
     private let networkService: NetworkService
     private var cancellables = Set<AnyCancellable>()
     private let itemsPerPage = 20
     private var currentOffset = 0
-    private var tempCoindata: [CryptoItem] = []
-
+    private let favoritesRepository: FavoritesRepository
     
-    init(networkService: NetworkService) {
+    init(
+      networkService: NetworkService,
+      favoritesRepository: FavoritesRepository = UserDefaultsFavoritesRepository()
+    ) {
         self.networkService = networkService
+        self.favoritesRepository = favoritesRepository
+      
+      Task {
+        await loadFavorites()
+      }
         fetchNextPage()
-      
-      $searchText
-        .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-        .sink { [weak self] newText in
-          self?.filterCoins(searchText: newText)
-        }
-        .store(in: &cancellables)
-      
-      $filteredCoins
-        .map { $0.isEmpty && !self.searchText.isEmpty }
-        .assign(to: &$showNoResults)
+        
+        // Bind searchText to filter coins
+        $searchText
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] newText in
+                self?.filterCoins(searchText: newText)
+            }
+            .store(in: &cancellables)
+        
+        $filteredCoins
+            .combineLatest($searchText)
+            .map { filteredCoins, searchText in
+                filteredCoins.isEmpty && !searchText.isEmpty
+            }
+            .assign(to: &$showNoResults)
     }
     
     func fetchNextPage() {
@@ -47,32 +60,79 @@ class CoinListViewModel: ObservableObject {
             .sink { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
-                    debugPrint("Error fetching coins: \(error)")
+                  self?.errorMessage = "Failed to load data: \(error.localizedDescription)"
+                  debugPrint("Error fetching coins: \(error)")
                 }
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
                 let newCoins = response.data.coins.map { CryptoItem(from: $0) }
-                self.tempCoindata.append(contentsOf: newCoins)
-                self.coins = self.tempCoindata
-                self.filteredCoins = self.coins
-                self.currentOffset += self.itemsPerPage // Move offset forward
-                self.hasMorePages = self.currentOffset < 100 // Stop at 100 coins
+                self.coins.append(contentsOf: newCoins)
+                self.filteredCoins = self.coins // Initial sync
+                self.currentOffset += self.itemsPerPage
+                self.hasMorePages = self.currentOffset < 100
             }
             .store(in: &cancellables)
     }
+    
+    private func filterCoins(searchText: String) {
+        if searchText.isEmpty {
+            filteredCoins = coins
+        } else {
+            filteredCoins = coins.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+        }
+    }
+    
+  func resetSearch() {
+    searchText = ""
+    retryFetch()
+  }
+  func retryFetch() {
+    currentOffset = 0
+    coins.removeAll()
+    filteredCoins.removeAll()
+    fetchNextPage()
+  }
   
-  private func filterCoins(searchText: String) {
-    if searchText.isEmpty {
-      resetSearch()
-    } else {
-      filteredCoins = coins.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-      
+  private func loadFavorites() async {
+    do {
+      let favorites = try favoritesRepository.getAllFavorites()
+      await MainActor.run { favoriteIds = favorites }
+    } catch {
+      await MainActor.run { errorMessage = "Failed to load favorites: \(error.localizedDescription)" }
     }
   }
   
-  func resetSearch() {
-    searchText = ""
-    filteredCoins = coins 
-    print("Reset search, coins count: \(coins.count)")
+  func toggleFavorite(cryptoId: String, coin: CryptoItem) async {
+    do {
+      let isFavorite = try favoritesRepository.isFavorite(cryptoId: cryptoId)
+      if isFavorite {
+        try favoritesRepository.removeFavorite(cryptoId: cryptoId)
+      } else {
+        try favoritesRepository.addFavorite(crypto: coin)
+      }
+      
+      // Reload favorites to reflect the latest state
+      let updatedFavorites = try favoritesRepository.getAllFavorites()
+      await MainActor.run {
+        favoriteIds = updatedFavorites
+        objectWillChange.send() // Ensures SwiftUI updates any views depending on this data
+      }
+    } catch {
+      await MainActor.run { errorMessage = "Failed to update favorite: \(error.localizedDescription)" }
+    }
   }
+
+  
+  func isFavorite(cryptoId: String) -> Bool {
+    favoriteIds.contains(where: {$0.id == cryptoId })
+  }
+  
+  /*func getFavoriteItems() async -> [CryptoItem] {
+    do {
+      let favoriteIds = try await favoritesRepository.getAllFavorites()
+      return coins.filter { favoriteIds.contains($0.id) }
+    } catch {
+      return [] // Fallback on error
+    }
+  }*/
 }

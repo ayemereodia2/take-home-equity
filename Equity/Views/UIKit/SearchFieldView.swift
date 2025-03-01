@@ -64,6 +64,7 @@ class SearchFieldView: UIView {
   }
   
   @objc private func searchButtonTapped() {
+    searchTextField.resignFirstResponder()
     cancelAction?()
   }
   

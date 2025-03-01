@@ -38,12 +38,12 @@ class FilterTableViewCell: UITableViewCell {
 }
 
 class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    var highestPriceAction: (() -> Void)?
+    var best24HourAction: (() -> Void)?
+  
     private let filterOptions = [
         "Highest Price",
-        "Best 24-Hour Performance",
-        "Filter Option 3",
-        "Filter Option 4"
+        "Best 24-Hour Performance"
     ]
     
     private let tableView: UITableView = {
@@ -100,11 +100,13 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     private func filterByHighestPrice() {
-        print("Filtered by Highest Price")
+        // Filtered coins by Highest Price
+      highestPriceAction?()
     }
     
     private func filterByBestPerformance() {
-        print("Filtered by Best 24-Hour Performance")
+        // Filtered coins by Best 24-Hour Performance
+      best24HourAction?()
     }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

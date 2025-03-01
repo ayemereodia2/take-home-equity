@@ -10,7 +10,8 @@ import SwiftUI
 struct PopupView: View {
     let message: String
     @Binding var isVisible: Bool
-    
+    let messageType: MessageType
+  
     var body: some View {
         VStack {
             Spacer()
@@ -20,7 +21,7 @@ struct PopupView: View {
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.mint)
+                    .background(messageType == .error ? Color.red : Color.mint)
                     .cornerRadius(12)
                     .padding(.horizontal, 20)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -41,5 +42,5 @@ struct PopupView: View {
 
 
 #Preview {
-  PopupView(message: "BTC has been added to your favorite", isVisible: .constant(true))
+  PopupView(message: "BTC has been added to your favorite", isVisible: .constant(true), messageType: .error)
 }

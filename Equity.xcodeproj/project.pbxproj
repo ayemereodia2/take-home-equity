@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E7919D1E2D729CE400B84B67 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E7919D1D2D729CE400B84B67 /* DGCharts */; };
 		E797BD502D714D2E00406586 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = E797BD4F2D714D2E00406586 /* SVGKit */; };
 		E797BD522D714D2E00406586 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E797BD512D714D2E00406586 /* SVGKitSwift */; };
 		E7AC325C2D7006F7001E6707 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E7AC325B2D7006F7001E6707 /* README.md */; };
@@ -28,6 +29,19 @@
 			remoteInfo = Equity;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E7919D1B2D729CAF00B84B67 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E7AC325B2D7006F7001E6707 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -73,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E797BD522D714D2E00406586 /* SVGKitSwift in Frameworks */,
+				E7919D1E2D729CE400B84B67 /* DGCharts in Frameworks */,
 				E797BD502D714D2E00406586 /* SVGKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +140,7 @@
 				E7E34AE62D6E963B009A894E /* Sources */,
 				E7E34AE72D6E963B009A894E /* Frameworks */,
 				E7E34AE82D6E963B009A894E /* Resources */,
+				E7919D1B2D729CAF00B84B67 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -137,6 +153,7 @@
 			packageProductDependencies = (
 				E797BD4F2D714D2E00406586 /* SVGKit */,
 				E797BD512D714D2E00406586 /* SVGKitSwift */,
+				E7919D1D2D729CE400B84B67 /* DGCharts */,
 			);
 			productName = Equity;
 			productReference = E7E34AEA2D6E963B009A894E /* Equity.app */;
@@ -222,6 +239,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				E7919D1C2D729CE400B84B67 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E7E34AEB2D6E963B009A894E /* Products */;
@@ -585,6 +603,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E7919D1C2D729CE400B84B67 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 		E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
@@ -596,6 +622,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E7919D1D2D729CE400B84B67 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7919D1C2D729CE400B84B67 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
 		E797BD4F2D714D2E00406586 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E797BD4E2D714D2E00406586 /* XCRemoteSwiftPackageReference "SVGKit" */;

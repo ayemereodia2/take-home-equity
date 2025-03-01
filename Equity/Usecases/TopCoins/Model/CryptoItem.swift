@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Sample Model
 import Foundation
 
-struct CryptoItem: Identifiable {
+struct CryptoItem: Identifiable,Codable {
     let id: String
     let name: String
     let price: Double
@@ -20,6 +20,7 @@ struct CryptoItem: Identifiable {
     let supply: Double
     let iconUrl: String?
     let change:String
+    let sparkLine:[String?]?
     
     init(from coin: Coin) {
         self.id = coin.id
@@ -31,6 +32,7 @@ struct CryptoItem: Identifiable {
         self.supply = 0.0
         self.iconUrl = coin.iconUrl
         self.change = coin.change
+        self.sparkLine = coin.sparkline
     }
 }
 

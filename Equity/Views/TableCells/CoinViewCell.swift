@@ -172,9 +172,8 @@ class CoinViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    // Cancel any ongoing image load task to prevent wrong image assignment
     ImageLoader.shared.cancel(task: imageLoadTask)
     imageLoadTask = nil
-    cryptoIcon.image = UIImage(systemName: "bitcoinsign.circle") // Reset to placeholder
+    cryptoIcon.image = UIImage(systemName: "bitcoinsign.circle")
   }
 }
