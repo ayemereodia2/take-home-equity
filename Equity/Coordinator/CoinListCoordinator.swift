@@ -58,20 +58,6 @@ class CoinListCoordinator {
       sheet.preferredCornerRadius = 20
       sheet.selectedDetentIdentifier = .large
     }
-    
-//    // Pass filter actions
-//    filterVC.highestPriceAction = { [weak viewModel, weak filterVC] in
-//      viewModel?.filterByHighestPrice()
-//      viewController.view.setNeedsLayout()
-//      filterVC?.dismiss(animated: true)
-//    }
-//    
-//    filterVC.best24HourAction = { [weak viewModel, weak filterVC] in
-//      viewModel?.filterByBest24HourPerformance()
-//      viewController.view.setNeedsLayout()
-//      filterVC?.dismiss(animated: true)
-//    }
-    
     viewController.present(filterVC, animated: true, completion: nil)
   }
 }

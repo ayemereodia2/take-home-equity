@@ -1,5 +1,5 @@
 //
-//  BottomSheetView.swift
+//  BottomSheetFilterView.swift
 //  Equity
 //
 //  Created by ANDELA on 26/02/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FilterTableViewCell: UITableViewCell {
+class BottomSheetFilterView: UITableViewCell {
     static let identifier = "FilterTableViewCell"
     
     private let filterLabel: UILabel = {
@@ -76,7 +76,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(FilterTableViewCell.self, forCellReuseIdentifier: FilterTableViewCell.identifier)
+        tableView.register(BottomSheetFilterView.self, forCellReuseIdentifier: BottomSheetFilterView.identifier)
         return tableView
     }()
     
@@ -103,7 +103,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FilterTableViewCell.identifier, for: indexPath) as! FilterTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: BottomSheetFilterView.identifier, for: indexPath) as! BottomSheetFilterView
       let option = viewModel.filterOptions[indexPath.row]
       let isSelected = viewModel.isSelected(option)
       cell.configure(with: option.title, isSelected: isSelected)
