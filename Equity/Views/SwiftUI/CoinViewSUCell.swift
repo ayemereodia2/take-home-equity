@@ -62,8 +62,3 @@ struct CoinViewSUCell: View {
   }
 }
 
-
-
-#Preview {
-  //CoinViewSUCell(coin: CryptoItem)
-}

@@ -46,6 +46,12 @@ class FilterButtonCell: UICollectionViewCell {
     onFilterTapped?()
   }
   
+  func updateBackgroundColor(isSelected: Bool) {
+    button.backgroundColor = isSelected ? UIColor.dynamicColor(for: .text) : UIColor.lightGray.withAlphaComponent(0.3)
+    button.setTitleColor(isSelected ? .black : UIColor.dynamicColor(for: .text), for: .normal)
+    button.tintColor = isSelected ? .black : UIColor.dynamicColor(for: .text)
+  }
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

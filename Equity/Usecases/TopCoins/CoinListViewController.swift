@@ -11,6 +11,7 @@ import Combine
 
 
 class CoinListViewController: UIViewController {
+  
   // MARK: - Properties
   private var bottomSheetHeightConstraint: NSLayoutConstraint!
   private var favoriteCryptoIds: Set<String> = []
@@ -30,7 +31,12 @@ class CoinListViewController: UIViewController {
   }()
   
   private lazy var headerView: HeaderView = {
-    let view = HeaderView()
+    let headerViewModel = HeaderViewModel()
+    var filterManager = FilterCollectionViewManager(
+      filterOptions: headerViewModel.filterOptions,
+      delegate: self)
+    
+    let view = HeaderView(filterManager: filterManager)
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
@@ -78,7 +84,6 @@ class CoinListViewController: UIViewController {
     super.viewDidLoad()
     setupUI()
     configureTableView()
-    setupHeaderView()
     bindViewModel()
     addRefreshControl()
   }
@@ -104,24 +109,7 @@ class CoinListViewController: UIViewController {
     tableView.allowsSelection = true
     registerCustomCell()
   }
-  
-  private func setupHeaderView() {
-    headerView.filterAction = { [weak self] in
-      self?.presentFilterSheet()
-    }
-    
-    headerView.allAssetsAction = { [weak self] in
-      self?.reloadCoins()
-    }
-    
-    headerView.searchAction = { [weak self] queryString in
-      self?.viewModel.searchText = queryString
-    }
-    
-    headerView.cancelAction = { [weak self] in
-      self?.viewModel.resetSearch()
-    }
-  }
+
   
   private func bindViewModel() {
     viewModel.$filteredCoins
@@ -195,11 +183,31 @@ class CoinListViewController: UIViewController {
   }
 }
 
-extension CoinListViewController {
+extension CoinListViewController: HeaderViewDelegate {
+  
   func presentFilterSheet() {
-    coordinator.presentFilterSheet(from: self, viewModel: viewModel)
+    coordinator.presentFilterSheet(
+      from: self,
+      viewModel: viewModel
+    )
   }
   private func reloadCoins() {
     viewModel.fetchNextPage()
+  }
+  
+  func didTapFilter() {
+    presentFilterSheet()
+  }
+  
+  func didTapAllAssets() {
+    reloadCoins()
+  }
+  
+  func didSearch(_ text: String) {
+    viewModel.searchText = text
+  }
+  
+  func didCancelSearch() {
+    viewModel.resetSearch()
   }
 }

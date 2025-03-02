@@ -22,7 +22,7 @@ struct FavoritesCoinsView: View {
               .resizable()
               .scaledToFit()
               .frame(width: 100, height: 100)
-            Text("Your favorites list is empty")
+            Text(NSLocalizedString("empty_favorites", comment: ""))
               .font(.title)
               .foregroundColor(.gray)
           }
@@ -63,7 +63,7 @@ struct FavoritesCoinsView: View {
       .task {
           await viewModel.reloadFavorites()
       }
-      .navigationTitle("Favorite Coins")
+      .navigationTitle(NSLocalizedString("favorite_coins", comment: ""))
     }
   }
 }

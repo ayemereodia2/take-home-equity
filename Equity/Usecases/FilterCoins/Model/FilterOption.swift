@@ -6,3 +6,12 @@
 //
 
 import Foundation
+struct FilterOption: Equatable {
+    let id: String
+    let title: String
+    let imageTitle: String?
+    
+    static func == (lhs: FilterOption, rhs: FilterOption) -> Bool {
+        lhs.id == rhs.id
+    }
+}

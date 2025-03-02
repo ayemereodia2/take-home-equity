@@ -12,4 +12,7 @@
 "volume_24h" = "Volume (24h):";
 "supply" = "Supply";
 "performance_chart" = "Performance Chart";
+"favorite_coins" = "Favorite Coins";
+"empty_favorites" = "Your favorites list is empty";
+"top_coins" = "Top 100";
 

@@ -30,7 +30,7 @@ class TopSearchView: UIView {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-    label.text = "Top 100"
+    label.text = NSLocalizedString("top_coins", comment: "")
     return label
   }()
   
