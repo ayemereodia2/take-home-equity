@@ -180,7 +180,6 @@ class CoinListViewController: UIViewController {
     }
 }
 
-
 extension CoinListViewController {
   func presentFilterSheet() {
     coordinator.presentFilterSheet(from: self, viewModel: viewModel)
