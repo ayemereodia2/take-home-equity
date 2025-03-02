@@ -8,10 +8,6 @@
 import Foundation
 import UIKit
 
-extension UIViewController {
-    
-}
-
 class NavigationBarCustomizer {
     static let shared = NavigationBarCustomizer()
     
