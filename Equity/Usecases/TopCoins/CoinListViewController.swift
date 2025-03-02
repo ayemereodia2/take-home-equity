@@ -19,6 +19,7 @@ class CoinListViewController: UIViewController {
     private var popupHostingController: UIHostingController<PopupView>?
     private var popupIsVisible = false
     private var cancellables = Set<AnyCancellable>()
+    let coordinator: CoinListCoordinator
     
     // MARK: - UI Components
     private lazy var tableView: UITableView = {
@@ -35,8 +36,9 @@ class CoinListViewController: UIViewController {
     }()
     
     private lazy var noResultsLabel: UILabel = {
+      let noResultsText = NSLocalizedString("no_results_found", comment: "")
         let label = UILabel()
-        label.text = "No results found"
+        label.text = noResultsText
         label.textAlignment = .center
         label.textColor = .gray
         label.isHidden = true
@@ -49,9 +51,13 @@ class CoinListViewController: UIViewController {
     private var delegate: CoinListDelegate!
     
     // MARK: - Initializer
-    init(viewModel: CoinListViewModel, favoriteCoinViewModel: FavoritesCoinViewModel) {
+    init(
+      viewModel: CoinListViewModel,
+      favoriteCoinViewModel: FavoritesCoinViewModel, coordinator: CoinListCoordinator
+    ) {
         self.viewModel = viewModel
         self.favoriteCoinViewModel = favoriteCoinViewModel
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -126,7 +132,7 @@ class CoinListViewController: UIViewController {
       viewModel.$errorMessage
             .sink { [weak self] errorMessage in
                 guard let self = self, let message = errorMessage else { return }
-                self.showPopup(message: message, messageType: .error)
+              PopupManager.showPopup(on: self, message: message, messageType: .error)
                 self.tableView.isHidden = true
             }
             .store(in: &cancellables)
@@ -156,79 +162,10 @@ class CoinListViewController: UIViewController {
 
 
 extension CoinListViewController {
-  private func presentFilterSheet() {
-    let filterVC = FilterViewController()
-    if let sheet = filterVC.sheetPresentationController {
-      sheet.detents = [.medium()]
-      sheet.prefersGrabberVisible = true
-      sheet.preferredCornerRadius = 20
-      sheet.selectedDetentIdentifier = .large
-    }
-    
-    filterVC.highestPriceAction = { [weak self] in
-      self?.viewModel.filterByHighestPrice()
-      self?.tableView.reloadData()
-      filterVC.dismiss(animated: true)
-    }
-    
-    filterVC.best24HourAction = { [weak self] in
-      self?.viewModel.filterByBest24HourPerformance()
-      self?.tableView.reloadData()
-      filterVC.dismiss(animated: true)
-    }
-    
-    present(filterVC, animated: true, completion: nil)
+  func presentFilterSheet() {
+    coordinator.presentFilterSheet(from: self, viewModel: viewModel)
   }
-  
   private func reloadCoins() {
     viewModel.fetchNextPage()
-  }
-}
-
-extension CoinListViewController {
-  // MARK: - Navigation using UIHostingController
-  func navigateToCryptoDetail(with crypto: CryptoItem) {
-    let detailView = CryptoDetailView(
-      crypto: crypto,
-      viewModel: favoriteCoinViewModel
-    )
-    
-    let hostingController = UIHostingController(rootView: detailView)
-    hostingController.navigationItem.hidesBackButton = true
-
-    navigationController?.pushViewController(hostingController, animated: true)
-  }
-  
-  func showPopup(message: String, messageType: MessageType) {
-    if popupIsVisible { return }
-    popupIsVisible = true
-    
-    let popupView = PopupView(
-      message: message,
-      isVisible: .constant(true),
-      messageType: messageType
-    )
-    
-    let hostingController = UIHostingController(rootView: popupView)
-    hostingController.view.backgroundColor = .clear
-    hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-    
-    addChild(hostingController)
-    view.addSubview(hostingController.view)
-    hostingController.didMove(toParent: self)
-    
-    NSLayoutConstraint.activate([
-      hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      hostingController.view.heightAnchor.constraint(equalToConstant: 100)
-    ])
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-      hostingController.willMove(toParent: nil)
-      hostingController.view.removeFromSuperview()
-      hostingController.removeFromParent()
-      self.popupIsVisible = false
-    }
   }
 }

@@ -6,8 +6,8 @@
 //
 
 import XCTest
-@testable import Equity
 import Combine
+@testable import Equity
 
 
 /*class APIServiceTests: XCTestCase {

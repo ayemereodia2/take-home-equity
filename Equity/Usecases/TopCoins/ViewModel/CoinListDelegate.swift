@@ -21,7 +21,11 @@ final class CoinListDelegate: NSObject, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let viewController = viewController else { return }
         let selectedCrypto = viewController.viewModel.filteredCoins[indexPath.row]
-        viewController.navigateToCryptoDetail(with: selectedCrypto)
+      
+      viewController.coordinator.showCryptoDetail(
+        for: selectedCrypto,
+        favoriteCoinViewModel: viewController.favoriteCoinViewModel
+      )
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -49,7 +53,7 @@ final class CoinListDelegate: NSObject, UITableViewDelegate {
                 let message = viewController.viewModel.isFavorite(cryptoId: cryptoId) ?
                 NSLocalizedString("added_to_favorites", comment: "") :
                 NSLocalizedString("removed_from_favorites", comment: "")
-                viewController.showPopup(message: "\(coinName) \(message)", messageType: .info)
+              PopupManager.showPopup(on: viewController, message: "\(coinName) \(message)", messageType: .info)
                 completion(true)
             }
         }

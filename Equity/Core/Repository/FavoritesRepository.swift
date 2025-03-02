@@ -11,6 +11,22 @@ import Foundation
 
  */
 
+protocol Repository {
+    associatedtype Item: Codable & Identifiable
+    func add(_ item: Item) throws
+    func remove(id: String) throws
+    func contains(id: String) throws -> Bool
+    func getAll() throws -> [Item]
+}
+
+
+// Custom error type
+enum RepositoryError: Error {
+    case storageFailure
+    case decodingFailure
+}
+
+
 protocol FavoritesRepository {
     func addFavorite(crypto: CryptoItem) throws
     func removeFavorite(cryptoId: String) throws
@@ -19,58 +35,29 @@ protocol FavoritesRepository {
 }
 
 class UserDefaultsFavoritesRepository: FavoritesRepository {
-    private let userDefaults: UserDefaults
-    private let queue = DispatchQueue(label: "com.cryptoapp.favorites", attributes: .concurrent) // Thread-safe access
+    //private let userDefaults: UserDefaults
+    //private let queue = DispatchQueue(label: "com.cryptoapp.favorites", attributes: .concurrent) // Thread-safe access
+  private let repository: GenericUserDefaultsRepository<CryptoItem>
+
 
     init(userDefaults: UserDefaults = .standard) {
-        self.userDefaults = userDefaults
+      self.repository = GenericUserDefaultsRepository(userDefaults: userDefaults, storageNamespace: "favorites")
     }
     
     func addFavorite(crypto: CryptoItem) throws {
-        queue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
-            do {
-                let data = try JSONEncoder().encode(crypto)
-                self.userDefaults.set(data, forKey: crypto.id)
-            } catch {
-                print("Error encoding CryptoItem: \(error)")
-            }
-        }
+      try repository.add(crypto)
     }
     
     func removeFavorite(cryptoId: String) throws {
-        queue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
-            if self.userDefaults.object(forKey: cryptoId) == nil {
-                print("CryptoItem with ID \(cryptoId) not found.")
-                return
-            }
-            self.userDefaults.removeObject(forKey: cryptoId)
-        }
+      try repository.remove(id: cryptoId)
     }
     
     func isFavorite(cryptoId: String) throws -> Bool {
-        return queue.sync {
-            guard userDefaults.data(forKey: cryptoId) != nil else {
-                return false
-            }
-            return true
-        }
+      try repository.contains(id: cryptoId)
     }
     
     func getAllFavorites() throws -> [CryptoItem] {
-        return queue.sync {
-            userDefaults.dictionaryRepresentation()
-                .compactMap { key, value in
-                    guard let data = value as? Data else { return nil }
-                    do {
-                        return try JSONDecoder().decode(CryptoItem.self, from: data)
-                    } catch {
-                        print("Error decoding CryptoItem: \(error)")
-                        return nil
-                    }
-                }
-        }
+      try repository.getAll()
     }
 }
 

@@ -61,7 +61,10 @@ class CoinListViewModel: CoinListViewModelProtocol {
       .sink { [weak self] completion in
         self?.isLoading = false
         if case .failure(let error) = completion {
-          self?.errorMessage = "Failed to load data: \(error.localizedDescription)"
+          let errorMessage =
+          NSLocalizedString("failed_to_load_data", comment: "")
+          
+          self?.errorMessage = "\(errorMessage): \(error.localizedDescription)"
           debugPrint("Error fetching coins: \(error)")
         }
       } receiveValue: { [weak self] response in
@@ -99,7 +102,8 @@ class CoinListViewModel: CoinListViewModelProtocol {
       let favorites = try favoritesRepository.getAllFavorites()
       await MainActor.run { favoriteCoins = favorites }
     } catch {
-      await MainActor.run { errorMessage = "Failed to load favorites: \(error.localizedDescription)" }
+      let errorLocalMsg = NSLocalizedString("failed_to_load_favorites", comment: "")
+      await MainActor.run { errorMessage = "\(errorLocalMsg): \(error.localizedDescription)" }
     }
   }
   
@@ -119,7 +123,8 @@ class CoinListViewModel: CoinListViewModelProtocol {
         objectWillChange.send() // Ensures SwiftUI updates any views depending on this data
       }
     } catch {
-      await MainActor.run { errorMessage = "Failed to update favorite: \(error.localizedDescription)" }
+      let errorLocalUpdateMsg = NSLocalizedString("failed_to_update_favorites", comment: "")
+      await MainActor.run { errorMessage = "\(errorLocalUpdateMsg): \(error.localizedDescription)" }
     }
   }
   
@@ -136,4 +141,19 @@ class CoinListViewModel: CoinListViewModelProtocol {
     filteredCoins = coins.sorted { (Double($0.change.replacingOccurrences(of: "%", with: "")) ?? 0) > (Double($1.change.replacingOccurrences(of: "%", with: "")) ?? 0)
     }
   }
+  
+  func applyFilter(_ filterType: FilterType) {
+      switch filterType {
+      case .highestPrice:
+          filterByHighestPrice()
+      case .best24Hour:
+          filterByBest24HourPerformance()
+      }
+  }
+
+}
+
+enum FilterType {
+  case highestPrice
+  case best24Hour
 }
