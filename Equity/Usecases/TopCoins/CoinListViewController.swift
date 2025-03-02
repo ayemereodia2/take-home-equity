@@ -45,6 +45,14 @@ class CoinListViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+  
+  private lazy var loadingView: UIActivityIndicatorView = {
+    let activityIndicator = UIActivityIndicatorView(style: .large)
+    activityIndicator.color = .gray
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    activityIndicator.hidesWhenStopped = true
+    return activityIndicator
+  }()
     
     // MARK: - DataSource and Delegate
     private var dataSource: CoinListDataSource!
@@ -79,6 +87,7 @@ class CoinListViewController: UIViewController {
         view.addSubview(headerView)
         view.addSubview(tableView)
         view.addSubview(noResultsLabel)
+        view.addSubview(loadingView)
         setupConstraints()
     }
     
@@ -118,10 +127,19 @@ class CoinListViewController: UIViewController {
             .store(in: &cancellables)
         
       viewModel.$isLoading
-            .sink { [weak self] isLoading in
-                if !isLoading { self?.tableView.reloadData() }
-            }
-            .store(in: &cancellables)
+        .sink { [weak self] isLoading in
+          guard let self = self else { return }
+          if isLoading {
+            self.loadingView.startAnimating()
+            self.tableView.isHidden = true
+            self.noResultsLabel.isHidden = true
+          } else {
+            self.loadingView.stopAnimating()
+            self.tableView.isHidden = false
+            self.tableView.reloadData()
+          }
+        }
+        .store(in: &cancellables)
         
       viewModel.$showNoResults
             .sink { [weak self] showNoResults in
@@ -151,7 +169,9 @@ class CoinListViewController: UIViewController {
             noResultsLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
             noResultsLabel.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
             noResultsLabel.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 16),
-            noResultsLabel.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -16)
+            noResultsLabel.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -16),
+            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
