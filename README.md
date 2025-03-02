@@ -31,6 +31,9 @@ I used **Model-View-ViewModel-Coordinator (MVVM-C) pattern** for both UIKit (`Co
 - **Charting**: Used the **Charts** library (iOS-Charts) for sparkline visualization, assuming a basic line chart meets requirements.
 - **Favorites**: Implemented swipe actions for favoriting/unfavoriting, a common UX pattern for list interactions.
 
+## Internationalization
+- Added a localized file to handle strings and support internationalization (i18n). This allows the app to be easily adapted for multiple languages, improving accessibility and usability for users in different region
+
 ## Assumptions
 
 - **API Response**: I assumed `CoinResponse` matches the provided structure, with optional fields (e.g., `sparkline`) handled gracefully.
