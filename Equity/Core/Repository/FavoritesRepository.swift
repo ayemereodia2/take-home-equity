@@ -35,8 +35,7 @@ protocol FavoritesRepository {
 }
 
 class UserDefaultsFavoritesRepository: FavoritesRepository {
-    //private let userDefaults: UserDefaults
-    //private let queue = DispatchQueue(label: "com.cryptoapp.favorites", attributes: .concurrent) // Thread-safe access
+    
   private let repository: GenericUserDefaultsRepository<CryptoItem>
 
 
