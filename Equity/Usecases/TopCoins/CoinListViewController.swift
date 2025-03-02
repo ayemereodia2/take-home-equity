@@ -80,6 +80,7 @@ class CoinListViewController: UIViewController {
     configureTableView()
     setupHeaderView()
     bindViewModel()
+    addRefreshControl()
   }
   
   // MARK: - Setup Methods
@@ -180,6 +181,17 @@ class CoinListViewController: UIViewController {
   
   private func registerCustomCell() {
     tableView.register(CoinViewCell.self, forCellReuseIdentifier: CoinViewCell.identifier)
+  }
+  
+  private func addRefreshControl() {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    tableView.refreshControl = refreshControl
+  }
+  
+  @objc private func refreshData() {
+    viewModel.retryFetch()
+    tableView.refreshControl?.endRefreshing()
   }
 }
 

@@ -41,7 +41,7 @@ class CoinViewCell: UITableViewCell {
   private let cryptoIcon:UIImageView = {
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.image = UIImage(systemName: "brain.head.profile")
+        icon.image = UIImage(systemName: "photo")
         return icon
     }()
     
@@ -165,7 +165,7 @@ class CoinViewCell: UITableViewCell {
        let url = URL(string: strUrl) {
       imageLoadTask = ImageLoader.shared.loadImage(from: url) { [weak self] image in
         guard let self = self else { return }
-        self.cryptoIcon.image = image ?? UIImage(systemName: "exclamationmark.triangle")
+        self.cryptoIcon.image = image ?? UIImage(systemName: "bitcoinsign.arrow.circlepath")
       }
     }
   }
