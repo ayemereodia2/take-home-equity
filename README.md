@@ -38,6 +38,7 @@ No Real-Time Updates: Assumed static data fetches suffice, with no WebSocket or 
 
 
 ### Challenges I encountered
+
 1. Persisting Filter Selection State
 The FilterViewController’s selected filter state reset on each presentation because FilterViewModel was recreated, losing the selectedFilter.
 
@@ -48,24 +49,28 @@ Futhermore, duplicating repository logic for CryptoItem and FilterOption violate
 
 I Initially aligned FilterOption with String IDs (e.g., "highestPrice") to match CryptoItem, ensuring compatibility with the generic repository. Later explored a fully generic ID approach but settled on String for consistency and simplicity.
 
-4. Mocking Network Responses
+3. Mocking Network Responses
 Challenge: The original MockNetworkSession didn’t correctly mimic URLSession.DataTaskPublisher, causing test failures due to type mismatches and missing data emission.
 
 I tried to Rewrote MockNetworkSession with a custom DataTaskMockPublisher and DataTaskMockSubscription, ensuring it emits (data, response) or fails with URLError as expected. But it still needs more work
 
-5. Chart Performance with Historical Data still needs more work for an intuitive display of prices over time
+4. Chart Performance with Historical Data still needs more work for an intuitive display of prices over time
 Also, plotting large sparkline datasets (e.g., hourly crypto prices) could degrade performance in the Charts library.
 
 
-6. SwiftUI/UIKit Integration
- Mixing SwiftUI (FavoritesCoinsView) and UIKit (CoinListViewController, FilterViewController) required consistent state management and navigation.
-7.Loading SVG Images from URLs
+5. SwiftUI/UIKit Integration
+Mixing SwiftUI (FavoritesCoinsView) and UIKit (CoinListViewController, FilterViewController) required consistent state management and navigation.
+6. Loading SVG Images from URLs
 Displaying SVG images from URLs in a UIImage proved difficult due to iOS’s lack of native support for remote SVG resource loading. Initially, I attempted to use WKWebView for rendering, but encountered scaling issues that compromised image quality. After researching alternatives, I determined that WKWebKit was overly complex for this purpose.  
-
 I opted for SVGKit, a lightweight third-party library, which efficiently converts remote SVGs into UIImages, ensuring proper scaling and integration with the app’s UI.
 
+7. Implementing Performance filters like absoluteChange,percentageChange, highestPrice and lowestPrice resulted in filters returning single values sometimes.
 
-Fnally, I focused on core requirements (listing, filtering, favorites, charting) without over-engineering.
+The LineChart expects an array of multiple data points, so when these filters are selected, it tries to plot only one data point, making the chart disappear sometimes.
+So I ensured filters like absoluteChange and percentageChange returned multiple values instead of just one, preventing the graph from vanishing.
+Furthermore, I also ensured, Filters like Highest Price and Lowest Price displayed properly,Instead of a single value, they return a horizontal line (all points at the max or min price).
+
+Fnally, I ensured I focused on core requirements (listing, filtering, favorites, charting) without over-engineering.
 
 
 

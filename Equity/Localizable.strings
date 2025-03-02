@@ -4,3 +4,12 @@
 "failed_to_update_favorites" = "Failed to update favorite";
 "failed_to_load_data" = "Failed to load data";
 "no_results_found" = "No results found";
+"absolute_change" = "Absolute Change";
+"perc_change" = "% Change";
+"highest" = "Highest";
+"lowest" = "Lowest";
+"market_cap" = "Market Cap:";
+"volume_24h" = "Volume (24h):";
+"supply" = "Supply";
+"performance_chart" = "Performance Chart";
+
