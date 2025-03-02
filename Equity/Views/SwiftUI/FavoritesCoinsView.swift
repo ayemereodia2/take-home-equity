@@ -25,6 +25,7 @@ struct FavoritesCoinsView: View {
               ) {
                     CoinViewSUCell(coin: coin)
                 }
+              .buttonStyle(PlainButtonStyle())
               .swipeActions(edge: .trailing) {
                 Button(role: .destructive) {
                   Task {
@@ -34,7 +35,7 @@ struct FavoritesCoinsView: View {
                     isPopupVisible = true
                   }
                 } label: {
-                  Label("Unfavorite", systemImage: "star.slash")
+                  Label("", systemImage: "star.slash")
                 }
                 .tint(.red)
               }

@@ -34,11 +34,76 @@ struct CryptoItem: Identifiable,Codable {
         self.change = coin.change
         self.sparkLine = coin.sparkline
     }
+  
+  // Memberwise initializer
+      init(
+          id: String,
+          name: String,
+          price: Double,
+          marketCap: Double,
+          volume24h: Double,
+          symbol: String,
+          supply: Double,
+          iconUrl: String?,
+          change: String,
+          sparkLine: [String?]?
+      ) {
+          self.id = id
+          self.name = name
+          self.price = price
+          self.marketCap = marketCap
+          self.volume24h = volume24h
+          self.symbol = symbol
+          self.supply = supply
+          self.iconUrl = iconUrl
+          self.change = change
+          self.sparkLine = sparkLine
+      }
 }
 
-
-// MARK: - Sample Data Model for Chart
-struct CryptoPerformanceData {
-    let date: Date
-    let price: Double
+extension CryptoItem {
+    /// A mock instance of `CryptoItem` for testing purposes.
+    static func mock() -> CryptoItem {
+        return CryptoItem(
+            id: "bitcoin",
+            name: "Bitcoin",
+            price: 50000.0,
+            marketCap: 1_000_000_000_000.0,
+            volume24h: 50_000_000_000.0,
+            symbol: "BTC",
+            supply: 21_000_000.0,
+            iconUrl: "https://example.com/bitcoin.png",
+            change: "+5.0%",
+            sparkLine: ["50000", "51000", "52000", "53000", "54000", "55000"]
+        )
+    }
+  
+  static func mockList() -> [CryptoItem] {
+      return [
+        CryptoItem(
+          id: "bitcoin",
+          name: "Bitcoin",
+          price: 50000.0,
+          marketCap: 1_000_000_000_000.0,
+          volume24h: 50_000_000_000.0,
+          symbol: "BTC",
+          supply: 21_000_000.0,
+          iconUrl: "https://example.com/bitcoin.png",
+          change: "+5.0%",
+          sparkLine: ["50000", "51000", "52000", "53000", "54000", "55000"]
+      ),
+        CryptoItem(
+          id: "dogecoin",
+          name: "Dogecoin",
+          price: 20000.0,
+          marketCap: 1_000_000_000_000.0,
+          volume24h: 50_000_000_000.0,
+          symbol: "DGC",
+          supply: 21_000_000.0,
+          iconUrl: "https://example.com/dogecoin.png",
+          change: "+5.0%",
+          sparkLine: ["50000", "51000", "52000", "53000", "54000", "55000"]
+      )
+      ]
+  }
 }

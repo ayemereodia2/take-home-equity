@@ -16,7 +16,7 @@ class MainTabBarController: UITabBarController {
       viewModel: CoinListViewModel(
         networkService: APIService()
       ),
-      favoriteCointViewModel: FavoritesCoinViewModel()
+      favoriteCoinViewModel: FavoritesCoinViewModel()
     ))
     
     coinListVC.tabBarItem = UITabBarItem(title: "", image: UIImage(systemName: "house"), tag: 0)

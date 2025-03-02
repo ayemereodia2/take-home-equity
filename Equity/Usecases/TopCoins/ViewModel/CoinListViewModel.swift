@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class CoinListViewModel: ObservableObject {
+class CoinListViewModel: CoinListViewModelProtocol {
   @Published var coins: [CryptoItem] = []
   @Published var filteredCoins: [CryptoItem] = []
   @Published var isLoading = false
@@ -16,7 +16,8 @@ class CoinListViewModel: ObservableObject {
   @Published var searchText: String = ""
   @Published var showNoResults = false
   @Published var errorMessage: String? = nil
-  @Published var favoriteIds: [CryptoItem] = []
+  @Published var favoriteCoins: [CryptoItem] = []
+
   
   private let networkService: NetworkService
   private var cancellables = Set<AnyCancellable>()
@@ -96,7 +97,7 @@ class CoinListViewModel: ObservableObject {
   private func loadFavorites() async {
     do {
       let favorites = try favoritesRepository.getAllFavorites()
-      await MainActor.run { favoriteIds = favorites }
+      await MainActor.run { favoriteCoins = favorites }
     } catch {
       await MainActor.run { errorMessage = "Failed to load favorites: \(error.localizedDescription)" }
     }
@@ -114,7 +115,7 @@ class CoinListViewModel: ObservableObject {
       // Reload favorites to reflect the latest state
       let updatedFavorites = try favoritesRepository.getAllFavorites()
       await MainActor.run {
-        favoriteIds = updatedFavorites
+        favoriteCoins = updatedFavorites
         objectWillChange.send() // Ensures SwiftUI updates any views depending on this data
       }
     } catch {
@@ -124,7 +125,7 @@ class CoinListViewModel: ObservableObject {
   
   
   func isFavorite(cryptoId: String) -> Bool {
-    favoriteIds.contains(where: {$0.id == cryptoId })
+    favoriteCoins.contains(where: {$0.id == cryptoId })
   }
   
   func filterByHighestPrice() {

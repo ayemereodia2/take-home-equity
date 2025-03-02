@@ -15,7 +15,8 @@ struct CryptoDetailView: View {
     var isFavorite: Bool {
         viewModel.favoriteCoins.contains { $0.id == crypto?.id }
     }
-    @ObservedObject var viewModel: FavoritesCoinViewModel
+  
+   var viewModel: any FavoritesCoinViewModelProtocol
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -40,7 +41,7 @@ struct CryptoDetailView: View {
                     
                   }
 
-                  Text("$\(crypto?.price ?? 0, specifier: "%.2f")")
+                  Text(MoneyFormat.formatPrice(crypto?.price ?? 0, currencyCode: .cad))
                         .font(.title)
                         .foregroundColor(.green)
                 }

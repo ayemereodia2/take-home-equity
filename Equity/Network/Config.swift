@@ -44,7 +44,7 @@ struct ConfigMain {
     }()
     
     static var current: API {
-        let envKey = Environment.current.rawValue.lowercased()
+        let envKey = AppEnvironment.current.rawValue.lowercased()
         guard let apiConfig = config[envKey] else {
             fatalError("No config found for environment: \(envKey)")
         }
@@ -55,12 +55,12 @@ struct ConfigMain {
     static var apiKey: String { current.apiKey }
 }
 
-enum Environment: String {
+enum AppEnvironment: String {
     case development = "Development"
     case staging = "Staging"
     case production = "Production"
     
-    static var current: Environment {
+    static var current: AppEnvironment {
         #if DEBUG
         return .development
         #else

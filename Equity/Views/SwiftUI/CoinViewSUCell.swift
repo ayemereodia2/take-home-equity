@@ -26,27 +26,29 @@ struct CoinViewSUCell: View {
         }
       }
       
-      VStack(alignment: .leading, spacing: 4) {
-        Text(coin.name)
-          .font(.headline)
-          .foregroundColor(UIColor.toSwiftUIColor(for: .text))
-        Text(coin.symbol)
-          .font(.subheadline)
-          .foregroundColor(.gray)
-      }
-      
-      Spacer()
-      
-      VStack(alignment: .trailing, spacing: 4) {
-        Text("CA$" + String(format: "%.2f", coin.price))
-          .font(.headline)
-          .foregroundColor(.gray)
-        Text(String(format: "%.2f%%", Double(coin.change) ?? 0))
-          .font(.subheadline)
-          .padding(6)
-          .background(Double(coin.change) ?? 0 >= 0 ? Color.green.opacity(0.3) : Color.red.opacity(0.3))
-          .cornerRadius(6)
-          .foregroundColor(Double(coin.change) ?? 0 >= 0 ? .green : .red)
+      HStack(alignment: .center) {
+        VStack(alignment: .leading, spacing: 4) {
+          Text(coin.name)
+            .font(.headline)
+            .foregroundColor(UIColor.toSwiftUIColor(for: .text))
+          Text(coin.symbol)
+            .font(.subheadline)
+            .foregroundColor(.gray)
+        }
+        
+        Spacer()
+        
+        VStack(alignment: .trailing, spacing: 4) {
+          Text(MoneyFormat.formatPrice(coin.price, currencyCode: .cad))
+            .font(.system(size: 18, weight: .medium))
+            .foregroundColor(UIColor.toSwiftUIColor(for: .text))
+          Text(String(format: "%.2f%%", Double(coin.change) ?? 0))
+            .font(.subheadline)
+            .padding(6)
+            .background(Double(coin.change) ?? 0 >= 0 ? Color.green.opacity(0.3) : Color.red.opacity(0.3))
+            .cornerRadius(6)
+            .foregroundColor(Double(coin.change) ?? 0 >= 0 ? .green : .red)
+        }
       }
     }
     .task {

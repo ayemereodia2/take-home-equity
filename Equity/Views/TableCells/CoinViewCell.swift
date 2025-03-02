@@ -34,7 +34,7 @@ class CoinViewCell: UITableViewCell {
       let label = UILabel()
       label.translatesAutoresizingMaskIntoConstraints = false
       label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-      label.textColor = UIColor.gray
+      label.textColor = UIColor.dynamicColor(for: .text)
       return label
   }()
     
@@ -153,7 +153,7 @@ class CoinViewCell: UITableViewCell {
   func configureCell(model: CryptoItem) {
     cryptoName.text = model.name
     cryptoShortName.text = model.symbol
-    currentPrice.text = "CA$" + String(format: "%.2f%%",model.price)
+    currentPrice.text = MoneyFormat.formatPrice(model.price, currencyCode: .cad)
     
     let isPositive = Double(model.change) ?? 0 >= 0
     twentyFourHourPerformance.setTitle(String(format: "%.2f%%", Double(model.change) ?? 0), for: .normal)

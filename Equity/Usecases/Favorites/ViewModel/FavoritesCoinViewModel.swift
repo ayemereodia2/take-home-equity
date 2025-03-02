@@ -7,7 +7,8 @@
 
 import Foundation
 
-class FavoritesCoinViewModel: ObservableObject {
+class FavoritesCoinViewModel: FavoritesCoinViewModelProtocol {
+
     @Published var favoriteCoins: [CryptoItem] = []
     @Published var errorMessage: String? = nil
 
@@ -38,9 +39,7 @@ class FavoritesCoinViewModel: ObservableObject {
     func reloadFavorites() async {
         await loadFavorites()
     }
-}
-
-extension FavoritesCoinViewModel {
+  
     func toggleFavorite(crypto: CryptoItem?) async {
       guard let crypto else { return }
         do {
