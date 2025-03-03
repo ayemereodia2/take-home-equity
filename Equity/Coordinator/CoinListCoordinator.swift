@@ -34,8 +34,9 @@ class CoinListCoordinator {
   ) {
     let detailView = CryptoDetailView(crypto: crypto, viewModel: favoriteCoinViewModel)
     let hostingController = UIHostingController(rootView: detailView)
-    
-    navigationController.navigationItem.backBarButtonItem?.isHidden = true
+    hostingController.navigationItem.hidesBackButton = true
+    hostingController.navigationItem.backBarButtonItem = nil
+  
     navigationController.pushViewController(hostingController, animated: true)
   }
   
