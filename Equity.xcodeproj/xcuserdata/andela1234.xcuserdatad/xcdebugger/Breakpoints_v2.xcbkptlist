@@ -34,36 +34,6 @@
             endingLineNumber = "74"
             landmarkName = "saveSelectedFilter()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "ECDA3488-98FE-47C9-98C5-AA9C4EE30203 - 3c949a272a7ba11e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Equity.FilterViewModel.saveSelectedFilter() -&gt; ()"
-                  moduleName = "Equity.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/andela1234/Documents/PERSONAL_Documents/XCodeProject/Equity/Equity/Equity/Usecases/FilterCoins/ViewModel/FilterViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74">
-               </Location>
-               <Location
-                  uuid = "ECDA3488-98FE-47C9-98C5-AA9C4EE30203 - 3c949a272a7ba11e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Equity.FilterViewModel.saveSelectedFilter() -&gt; ()"
-                  moduleName = "Equity.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/andela1234/Documents/PERSONAL_Documents/XCodeProject/Equity/Equity/Equity/Usecases/FilterCoins/ViewModel/FilterViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
