@@ -33,7 +33,7 @@ class FilterCollectionViewManager: NSObject, UICollectionViewDataSource, UIColle
         cell.onFilterTapped = { [weak self] in
             guard let self = self else { return }
             self.selectedFilterId = option.id
-            collectionView.reloadData() // Update all cells to reflect selection
+            collectionView.reloadData()
             switch option.id {
             case "filter": self.delegate?.didTapFilter()
             case "allAssets": self.delegate?.didTapAllAssets()

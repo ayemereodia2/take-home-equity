@@ -67,7 +67,8 @@ class CoinListViewController: UIViewController {
   // MARK: - Initializer
   init(
     viewModel: CoinListViewModel,
-    favoriteCoinViewModel: FavoritesCoinViewModel, coordinator: CoinListCoordinator
+    favoriteCoinViewModel: FavoritesCoinViewModel,
+    coordinator: CoinListCoordinator
   ) {
     self.viewModel = viewModel
     self.favoriteCoinViewModel = favoriteCoinViewModel
@@ -86,6 +87,7 @@ class CoinListViewController: UIViewController {
     configureTableView()
     bindViewModel()
     addRefreshControl()
+    headerView.setDelegate(self)
   }
   
   // MARK: - Setup Methods

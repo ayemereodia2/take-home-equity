@@ -75,11 +75,13 @@ class HeaderView: UIView {
         collectionView.dataSource = filterManager
         
         topSearchView.onSearchTapped = { [weak self] in
-          self?.viewModel.toggleSearch()
+          //self?.viewModel.toggleSearch()
+          self?.toggleSearchInputView()
         }
         
         searchInputView.cancelAction = { [weak self] in
-            self?.viewModel.toggleSearch()
+            self?.toggleSearchInputView()
+            //self?.viewModel.toggleSearch()
             self?.delegate?.didCancelSearch()
         }
         
@@ -95,36 +97,37 @@ class HeaderView: UIView {
         
         headerViewHeightConstraint.constant = isHidden ? 50 : 120
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.0) {
             self.searchInputView.alpha = isHidden ? 1 : 0
             self.layoutIfNeeded()
         }
     }
     
-    private func setupLayout() {
-        headerViewHeightConstraint = heightAnchor.constraint(equalToConstant: 120)
-        topSearchViewHeightConstraint = topSearchView.heightAnchor.constraint(equalToConstant: 50)
-        collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 50)
-        
-        NSLayoutConstraint.activate([
-            headerViewHeightConstraint,
-            topSearchView.topAnchor.constraint(equalTo: topAnchor),
-            topSearchView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            topSearchView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topSearchViewHeightConstraint,
+  private func setupLayout() {
+    
+    headerViewHeightConstraint = heightAnchor.constraint(equalToConstant: 120)
+
+    topSearchViewHeightConstraint = topSearchView.heightAnchor.constraint(equalToConstant: 50)
+    collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 50)
+    
+    NSLayoutConstraint.activate([
+      headerViewHeightConstraint,
+      topSearchView.topAnchor.constraint(equalTo: topAnchor),
+      topSearchView.leadingAnchor.constraint(equalTo: leadingAnchor),
+      topSearchView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            searchInputView.topAnchor.constraint(equalTo: topAnchor),
-            searchInputView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            searchInputView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            searchInputView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            
-            collectionView.topAnchor.constraint(equalTo: topSearchView.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionViewHeightConstraint,
-            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-    }
+      searchInputView.topAnchor.constraint(equalTo: topAnchor),
+      searchInputView.leadingAnchor.constraint(equalTo: leadingAnchor, constant:10),
+      searchInputView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+      searchInputView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+  
+      collectionView.topAnchor.constraint(equalTo: topSearchView.bottomAnchor),
+      collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+      collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+      collectionViewHeightConstraint,
+      collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+    ])
+  }
     
     
     func setDelegate(_ delegate: HeaderViewDelegate) {
@@ -140,4 +143,3 @@ protocol HeaderViewDelegate: AnyObject {
     func didSearch(_ text: String)
     func didCancelSearch()
 }
-

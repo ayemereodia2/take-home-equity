@@ -34,6 +34,8 @@ class CoinListCoordinator {
   ) {
     let detailView = CryptoDetailView(crypto: crypto, viewModel: favoriteCoinViewModel)
     let hostingController = UIHostingController(rootView: detailView)
+    
+    navigationController.navigationItem.backBarButtonItem?.isHidden = true
     navigationController.pushViewController(hostingController, animated: true)
   }
   
@@ -41,7 +43,7 @@ class CoinListCoordinator {
     from viewController: CoinListViewController,
     viewModel: CoinListViewModel
   ) {
-      
+    
     let filterVC = FilterViewController(
       highestPriceAction: { [weak viewModel] in
         viewModel?.filterByHighestPrice()
