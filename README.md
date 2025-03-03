@@ -2,7 +2,7 @@
 ```markdown
 # Equity App - Test App
 
-This is a test app for Equity App. It interacts with a public API, retrieves paginated data, and presents the results in a table view.
+This is an app for Equity. It interacts with a public API, retrieves paginated data, and presents the results in a filterable and searchable table view.
 
 ## Project Instructions
 
