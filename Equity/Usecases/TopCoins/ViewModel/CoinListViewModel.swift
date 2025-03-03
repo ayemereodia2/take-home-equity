@@ -152,8 +152,3 @@ class CoinListViewModel: CoinListViewModelProtocol {
   }
 
 }
-
-enum FilterType {
-  case highestPrice
-  case best24Hour
-}

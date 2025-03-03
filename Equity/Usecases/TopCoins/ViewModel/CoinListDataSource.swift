@@ -31,7 +31,7 @@ final class CoinListDataSource: NSObject, UITableViewDataSource {
       
       guard indexPath.row < viewModel.filteredCoins.count else {
         tableView.separatorStyle = .none
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
         return UITableViewCell()
       }
         let coin = viewModel.filteredCoins[indexPath.row]

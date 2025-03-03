@@ -17,6 +17,8 @@ class CoinListViewController: UIViewController {
   private var favoriteCryptoIds: Set<String> = []
   let viewModel: CoinListViewModel
   let favoriteCoinViewModel: FavoritesCoinViewModel
+  let headerViewModel: HeaderViewModel
+
   private var popupHostingController: UIHostingController<PopupView>?
   private var popupIsVisible = false
   private var cancellables = Set<AnyCancellable>()
@@ -31,10 +33,9 @@ class CoinListViewController: UIViewController {
   }()
   
   private lazy var headerView: HeaderView = {
-    let headerViewModel = HeaderViewModel()
     var filterManager = FilterCollectionViewManager(
-      filterOptions: headerViewModel.filterOptions,
-      delegate: self)
+      filterOptions: headerViewModel.filterOptions
+    )
     
     let view = HeaderView(filterManager: filterManager)
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -68,10 +69,12 @@ class CoinListViewController: UIViewController {
   init(
     viewModel: CoinListViewModel,
     favoriteCoinViewModel: FavoritesCoinViewModel,
-    coordinator: CoinListCoordinator
+    coordinator: CoinListCoordinator,
+    headerViewModel: HeaderViewModel
   ) {
     self.viewModel = viewModel
     self.favoriteCoinViewModel = favoriteCoinViewModel
+    self.headerViewModel = headerViewModel
     self.coordinator = coordinator
     super.init(nibName: nil, bundle: nil)
   }
@@ -143,8 +146,15 @@ class CoinListViewController: UIViewController {
     
     viewModel.$errorMessage
       .sink { [weak self] errorMessage in
-        guard let self = self, let message = errorMessage else { return }
-        PopupManager.showPopup(on: self, message: message, messageType: .error)
+        
+        guard let self = self,
+              let message = errorMessage else { return }
+        
+        PopupManager.showPopup(
+          on: self,
+          message: message,
+          messageType: .error
+        )
         self.tableView.isHidden = true
       }
       .store(in: &cancellables)

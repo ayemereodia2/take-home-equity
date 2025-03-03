@@ -16,13 +16,18 @@ class CoinListCoordinator {
   }
   
   func start() {
-    let viewModel = CoinListViewModel(networkService: APIService())
-    let favoriteViewModel = FavoritesCoinViewModel()
+    let viewModel = CoinListViewModel(
+      networkService: APIService()
+    )
     
+    let favoriteViewModel = FavoritesCoinViewModel()
+    let headerViewModel = HeaderViewModel()
+
     let coinListVC = CoinListViewController(
       viewModel: viewModel,
       favoriteCoinViewModel: favoriteViewModel,
-      coordinator: self
+      coordinator: self,
+      headerViewModel: headerViewModel
     )
     
     navigationController.viewControllers = [coinListVC] // Set as Root VC

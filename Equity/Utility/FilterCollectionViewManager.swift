@@ -12,9 +12,8 @@ class FilterCollectionViewManager: NSObject, UICollectionViewDataSource, UIColle
     weak var delegate: HeaderViewDelegate?
     private var selectedFilterId: String?
     
-    init(filterOptions: [FilterOption], delegate: HeaderViewDelegate?) {
+    init(filterOptions: [FilterOption]) {
         self.filterOptions = filterOptions
-        self.delegate = delegate
         super.init()
     }
     
