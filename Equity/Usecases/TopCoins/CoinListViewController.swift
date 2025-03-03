@@ -15,7 +15,7 @@ class CoinListViewController: UIViewController {
   // MARK: - Properties
   private var bottomSheetHeightConstraint: NSLayoutConstraint!
   private var favoriteCryptoIds: Set<String> = []
-  let viewModel: CoinListViewModel
+  var viewModel: CoinListViewModel
   let favoriteCoinViewModel: FavoritesCoinViewModel
   let headerViewModel: HeaderViewModel
 

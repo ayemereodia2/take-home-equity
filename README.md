@@ -1,13 +1,13 @@
 
-```markdown
-# Equity App - Test App
+```
+## Equity App - Test App
 
 This is an app for Equity. It interacts with a public API, retrieves paginated data, and presents the results in a filterable and searchable table view.
 
 ## Project Instructions
 
 1. **Clone the project from GitHub:**
-   ```bash
+   ```
    git clone https://github.com/ayemereodia2/take-home-equity.git
    ```
 
