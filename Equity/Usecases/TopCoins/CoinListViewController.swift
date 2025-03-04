@@ -60,11 +60,7 @@ class CoinListViewController: UIViewController {
     hostingController.view.isHidden = true // Initially hidden
     return hostingController
   }()
-  
-  // MARK: - DataSource and Delegate
-  private var dataSource: CoinListDataSource!
-  private var delegate: CoinListDelegate!
-  
+    
   // MARK: - Initializer
   init(
     viewModel: CoinListViewModel,
@@ -82,6 +78,10 @@ class CoinListViewController: UIViewController {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  // MARK: - DataSource and Delegate
+  private var dataSource: CoinListDataSourceProtocol!
+  private var delegate: CoinListDelegateProtocol!
   
   // MARK: - Lifecycle
   override func viewDidLoad() {

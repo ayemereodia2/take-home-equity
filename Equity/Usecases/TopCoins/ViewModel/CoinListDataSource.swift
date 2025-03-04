@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class CoinListDataSource: NSObject, UITableViewDataSource {
+final class CoinListDataSource: NSObject, CoinListDataSourceProtocol {
     // MARK: - Properties
     private var viewModel: any CoinListViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -41,4 +41,8 @@ final class CoinListDataSource: NSObject, UITableViewDataSource {
         return cell
     }
    
+}
+
+protocol CoinListDataSourceProtocol: UITableViewDataSource {
+    init(viewModel: any CoinListViewModelProtocol) // Required initializer
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CoinListDelegate: NSObject, UITableViewDelegate {
+final class CoinListDelegate: NSObject, CoinListDelegateProtocol {
     // MARK: - Properties
     private weak var viewController: CoinListViewController?
     
@@ -71,4 +71,8 @@ final class CoinListDelegate: NSObject, UITableViewDelegate {
             viewController.viewModel.fetchNextPage()
         }
     }
+}
+
+protocol CoinListDelegateProtocol: UITableViewDelegate {
+    init(viewController: CoinListViewController) // Required initializer
 }
