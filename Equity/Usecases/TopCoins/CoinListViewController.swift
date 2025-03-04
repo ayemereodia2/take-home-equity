@@ -14,13 +14,10 @@ class CoinListViewController: UIViewController {
   
   // MARK: - Properties
   private var bottomSheetHeightConstraint: NSLayoutConstraint!
-  private var favoriteCryptoIds: Set<String> = []
   var viewModel: CoinListViewModel
   let favoriteCoinViewModel: FavoritesCoinViewModel
   let headerViewModel: HeaderViewModel
 
-  private var popupHostingController: UIHostingController<PopupView>?
-  private var popupIsVisible = false
   private var cancellables = Set<AnyCancellable>()
   let coordinator: CoinListCoordinator
   
